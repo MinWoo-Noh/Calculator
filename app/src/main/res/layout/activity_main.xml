@@ -16,6 +16,32 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_weight="1" />
 
+    <TextView
+        android:id="@+id/expressionTextView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="44dp"
+        android:textSize="22sp"
+        android:layout_marginStart="15dp"
+        android:gravity="end"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/black"
+        android:layout_marginEnd="15dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/resultTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="end"
+        android:textSize="20sp"
+        android:textColor="#aaaaaa"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toTopOf="@id/keypadTableLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"/>
     <TableLayout
         android:id="@+id/keypadTableLayout"
         android:layout_width="0dp"
@@ -87,7 +113,7 @@
                 android:layout_margin="7dp"
                 android:background="@drawable/button_background"
                 android:stateListAnimator="@null"
-                android:onClick="ButtonClicked"
+                android:onClick="buttonClicked"
                 android:text="7"
                 android:textSize="24dp" />
 
@@ -132,7 +158,7 @@
                 android:layout_margin="7dp"
                 android:background="@drawable/button_background"
                 android:stateListAnimator="@null"
-                android:onClick="ButtonClicked"
+                android:onClick="buttonClicked"
                 android:text="4"
                 android:textSize="24dp" />
 
@@ -177,7 +203,7 @@
                 android:layout_margin="7dp"
                 android:background="@drawable/button_background"
                 android:stateListAnimator="@null"
-                android:onClick="ButtonClicked"
+                android:onClick="buttonClicked"
                 android:text="1"
                 android:textSize="24dp" />
 
@@ -252,14 +278,15 @@
                 android:textSize="24dp" />
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/resultButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="7dp"
-                android:background="@drawable/button_background"
+                android:background="@drawable/button_bacground_green"
                 android:stateListAnimator="@null"
                 android:onClick="resultButtonClicked"
                 android:text="="
-                android:textColor="@color/green"
+                android:textColor="@color/white"
                 android:textSize="24sp" />
         </TableRow>
 
