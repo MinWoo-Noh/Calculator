@@ -12,7 +12,7 @@ import java.lang.NumberFormatException
 
 class MainActivity : AppCompatActivity() {
 
-    // TextView 2를 초기화개
+    // TextView 2를 초기화
     private val expressionTextView: TextView by lazy {
         findViewById<TextView>(R.id.expressionTextView)
     }
