@@ -8,6 +8,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import java.lang.NumberFormatException
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var isOperator = false // 숫자와 Operator 압력 구분을 위한 변수
-    private var hasOperator = false // Operator 를 한번만 입력 하기위한 변수
+    private var hasOperator = false // Operator 를 한번만 입력 하기위한 변수 (연산자가 있는지 없는지 판단)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +71,8 @@ class MainActivity : AppCompatActivity() {
         // 정상기능 동작 textView 에 숫자가 입력된다.
         expressionTextView.append(number)
 
-        // TODO resultTextView 에 실시간으로 계산결과를 넣어야 하는 기
+        // resultTextView 에 실시간으로 계산결과를 보여는 기능
+        resultTextView.text = calculatorExpression()
 
     }
 
@@ -102,7 +104,7 @@ class MainActivity : AppCompatActivity() {
         val ssb = SpannableStringBuilder(expressionTextView.text)
         ssb.setSpan(
                 ForegroundColorSpan(getColor(R.color.green)),
-                expressionTextView.text.length -1,
+                expressionTextView.text.length - 1,
                 expressionTextView.text.length,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
@@ -114,14 +116,78 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun resultButtonClicked(v: View) {
+        val expressionTexts = expressionTextView.text.split(" ")
+
+        // 아무것도 입력되지 않았거나, 숫자만 입력했을경우
+        if (expressionTextView.text.isEmpty() || expressionTexts.size == 1){
+            return
+        }
+        // 숫자만 입력되었거나 연산자와 같이 입력되고,  hasOperator 가 true 인 경우
+        if (expressionTexts.size != 3 && hasOperator){
+            Toast.makeText(this, "아직 완성되지 않은 수식입니다.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (expressionTexts[0].isNumber().not() || expressionTexts[2].isNumber().not()) {
+            Toast.makeText(this, "오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val expressionText = expressionTextView.text.toString() // db 에 수식을 저장할 용
+        val resultText = calculatorExpression() // calculatorExpression() 를 이용하여 결과값 표시도
+
+        resultTextView.text = ""
+        expressionTextView.text = resultText
+
+        isOperator = false
+        hasOperator = false
+    }
+    // Calculator 의 계산 결과값을 얻기위한 함수 (ex, 숫자 연산자 숫자)
+    private fun calculatorExpression(): String {
+        val expressionTexts = expressionTextView.text.split(" ")
+
+        // 예외처
+        // 연산자가 없거나, 숫자 연산자 숫자 형태로 String 값이 3개가 없으면 (길이가 3이 아니면) 빈 문자열("") 반환
+        if (hasOperator.not() || expressionTexts.size != 3) {
+            return ""
+        } else if (expressionTexts[0].isNumber().not() || expressionTexts[2].isNumber().not()) { // expressionTexts 의 문자열 첫번째 자리가 숫가자 아니거나 3버째 자리가 숫자가 아닐경우
+            return ""
+        }
+
+        val exp1 = expressionTexts[0].toBigInteger()
+        val exp2 = expressionTexts[2].toBigInteger()
+        val op = expressionTexts[1]
+
+        return when (op) {
+            "+" -> (exp1 + exp2).toString()
+            "-" -> (exp1 - exp2).toString()
+            "*" -> (exp1 * exp2).toString()
+            "%" -> (exp1 % exp2).toString()
+            "/" -> (exp1 / exp2).toString()
+            else -> ""
+        }
 
     }
 
     fun clearButtonClicked(v: View) {
-
+        expressionTextView.text = ""
+        resultTextView.text = ""
+        isOperator = false
+        hasOperator = false
     }
 
     fun historyButtonClicked(v: View) {
 
+    }
+
+    // 객체를 확장하는 함수
+    fun String.isNumber(): Boolean {
+        // Number 이 아닌 판단은 Number 로 바꿔보고 아니면 에러러 표시
+        return try {
+            this.toBigInteger()
+            true
+        } catch (e: NumberFormatException) {
+            false
+        }
     }
 }
